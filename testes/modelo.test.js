@@ -23,3 +23,19 @@ test('Testando cadastro de três perguntas', () => {
   expect(perguntas[2].num_respostas).toBe(0);
   expect(perguntas[1].id_pergunta).toBe(perguntas[2].id_pergunta-1);
 });
+
+test('Testando cadastro de resposta e recuperação de pergunta e respostas', () => {
+  const idPergunta = modelo.cadastrar_pergunta('Qual a capital da França?');
+  expect(typeof idPergunta).toBe('number');
+
+  const idResposta = modelo.cadastrar_resposta(idPergunta, 'Paris');
+  expect(typeof idResposta).toBe('number');
+
+  const pergunta = modelo.get_pergunta(idPergunta);
+  expect(pergunta.texto).toBe('Qual a capital da França?');
+
+  const respostas = modelo.get_respostas(idPergunta);
+  expect(respostas.length).toBe(1);
+  expect(respostas[0].texto).toBe('Paris');
+});
+
