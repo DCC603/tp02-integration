@@ -11,39 +11,39 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {
+app.get('/perguntas', (req, res) => {
   try {
     const perguntas = modelo.listar_perguntas();
-    res.send(perguntas);
-  }
-  catch(erro) {
-    res.status(500).json(erro.message); 
+    res.status(200).json(perguntas);   // importa devolver [] quando vazio
+  } catch (erro) {
+    res.status(500).json(erro.message);
   }
 });
 
 app.post('/perguntas', (req, res) => {
   try {
     const id_pergunta = modelo.cadastrar_pergunta(req.body.pergunta);
-    res.json({id_pergunta: id_pergunta});
+    res.status(201).json({ id_pergunta: id_pergunta });
+
   }
   catch(erro) {
     res.status(500).json(erro.message); 
   } 
 });
 
-app.get('/respostas/:id_pergunta', (req, res) => {
-  const id_pergunta = req.params.id_pergunta;
-  const pergunta = modelo.get_pergunta(id_pergunta);
-  const respostas = modelo.get_respostas(id_pergunta);
+app.get('/perguntas/:id', (req, res) => {
   try {
-    res.json({
-      pergunta: pergunta,
-      respostas: respostas
-    });
+    const id = req.params.id;
+    const pergunta = modelo.get_pergunta(id);   // função já existe no server
+
+    if (!pergunta) {
+      return res.status(404).json({ erro: 'Pergunta não encontrada' });
+    }
+
+    res.status(200).json(pergunta);
+  } catch (erro) {
+    res.status(500).json(erro.message);
   }
-  catch(erro) {
-    res.status(500).json(erro.message); 
-  } 
 });
 
 app.post('/respostas', (req, res) => {
@@ -60,6 +60,13 @@ app.post('/respostas', (req, res) => {
 
 // espera e trata requisições de clientes
 const port = 5000;
-app.listen(port, 'localhost', () => {
-  console.log(`ESM Forum rodando em ${port}`)
-});
+
+// Só liga o servidor se o arquivo for executado diretamente
+if (require.main === module) {
+  app.listen(port, 'localhost', () =>
+    console.log(`ESM Forum rodando em ${port}`)
+  );
+}
+
+module.exports = app;    // mantém para supertest
+; 
