@@ -31,19 +31,19 @@ app.post('/perguntas', (req, res) => {
   } 
 });
 
-app.get('/respostas/:id_pergunta', (req, res) => {
-  const id_pergunta = req.params.id_pergunta;
-  const pergunta = modelo.get_pergunta(id_pergunta);
-  const respostas = modelo.get_respostas(id_pergunta);
+app.get('/perguntas/:id', (req, res) => {
   try {
-    res.json({
-      pergunta: pergunta,
-      respostas: respostas
-    });
+    const id = req.params.id;
+    const pergunta = modelo.get_pergunta(id);   // função já existe no server
+
+    if (!pergunta) {
+      return res.status(404).json({ erro: 'Pergunta não encontrada' });
+    }
+
+    res.status(200).json(pergunta);
+  } catch (erro) {
+    res.status(500).json(erro.message);
   }
-  catch(erro) {
-    res.status(500).json(erro.message); 
-  } 
 });
 
 app.post('/respostas', (req, res) => {
