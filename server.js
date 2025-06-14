@@ -11,20 +11,20 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {
+app.get('/perguntas', (req, res) => {
   try {
     const perguntas = modelo.listar_perguntas();
-    res.send(perguntas);
-  }
-  catch(erro) {
-    res.status(500).json(erro.message); 
+    res.status(200).json(perguntas);   // importa devolver [] quando vazio
+  } catch (erro) {
+    res.status(500).json(erro.message);
   }
 });
 
 app.post('/perguntas', (req, res) => {
   try {
     const id_pergunta = modelo.cadastrar_pergunta(req.body.pergunta);
-    res.json({id_pergunta: id_pergunta});
+    res.status(201).json({ id_pergunta: id_pergunta });
+
   }
   catch(erro) {
     res.status(500).json(erro.message); 
@@ -60,6 +60,13 @@ app.post('/respostas', (req, res) => {
 
 // espera e trata requisições de clientes
 const port = 5000;
-app.listen(port, 'localhost', () => {
-  console.log(`ESM Forum rodando em ${port}`)
-});
+
+// Só liga o servidor se o arquivo for executado diretamente
+if (require.main === module) {
+  app.listen(port, 'localhost', () =>
+    console.log(`ESM Forum rodando em ${port}`)
+  );
+}
+
+module.exports = app;    // mantém para supertest
+; 
