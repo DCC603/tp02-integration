@@ -5,6 +5,9 @@ module.exports = {
         "es2021": true
     },
     "extends": "eslint:recommended",
+    plugins: [
+    'jest', 
+    ],
     "overrides": [
     ],
     "parserOptions": {
