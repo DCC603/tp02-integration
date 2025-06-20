@@ -23,3 +23,35 @@ test('Testando cadastro de três perguntas', () => {
   expect(perguntas[2].num_respostas).toBe(0);
   expect(perguntas[1].id_pergunta).toBe(perguntas[2].id_pergunta-1);
 });
+
+
+test('Testando cadastro de resposta e recuperação de respostas', () => {
+  const id = modelo.cadastrar_pergunta('Qual a capital da França?');
+  modelo.cadastrar_resposta(id, 'Paris');
+  modelo.cadastrar_resposta(id, 'Londres');
+  const respostas = modelo.get_respostas(id);
+  expect(respostas.length).toBe(2);
+  expect(respostas[0].texto).toBe('Paris');
+  expect(respostas[1].texto).toBe('Londres');
+});
+
+test('Testando recuperação de pergunta específica', () => {
+  const id = modelo.cadastrar_pergunta('Qual a capital da Alemanha?');
+  const pergunta = modelo.get_pergunta(id);
+  expect(pergunta.texto).toBe('Qual a capital da Alemanha?');
+  expect(pergunta.id_pergunta).toBe(id);
+});
+
+test('Testando recuperação do número de respostas', () => {
+  const id = modelo.cadastrar_pergunta('Qual o maior planeta do sistema solar?');
+  expect(modelo.get_num_respostas(id)).toBe(0);
+  modelo.cadastrar_resposta(id, 'Júpiter');
+  expect(modelo.get_num_respostas(id)).toBe(1);
+});
+
+test('Testando reconfig_bd (mudança para outro banco e verificação)', () => {
+  modelo.reconfig_bd('./bd/esmforum-teste.db');
+  const id = modelo.cadastrar_pergunta('Nova pergunta no novo banco?');
+  const pergunta = modelo.get_pergunta(id);
+  expect(pergunta.texto).toBe('Nova pergunta no novo banco?');
+});
