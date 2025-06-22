@@ -40,6 +40,8 @@ Para ver a cobertura dos testes, digite:
 
 ``npm test -- --coverage`` 
 
+(Extra) (Carla: Utilizei ``npx jest --coverage`` pois com o anterior dava o aviso de "npm warn Unknown cli config "--coverage". This will stop working in the next major version of npm." e nenhum arquivo era gerado)
+
 Para ver o relatório de cobertura, abra o arquivo:
 
 `coverage/lcov-report/index.html`
