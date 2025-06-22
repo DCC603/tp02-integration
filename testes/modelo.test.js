@@ -23,3 +23,30 @@ test('Testando cadastro de três perguntas', () => {
   expect(perguntas[2].num_respostas).toBe(0);
   expect(perguntas[1].id_pergunta).toBe(perguntas[2].id_pergunta-1);
 });
+
+test('Testando cadastro de resposta e funções get_pergunta, get_respostas e get_num_respostas', () => {
+  // Cadastra uma pergunta
+  const id_pergunta = modelo.cadastrar_pergunta('Qual a capital do Brasil?');
+  // Verifica se a pergunta foi cadastrada corretamente
+  const pergunta = modelo.get_pergunta(id_pergunta);
+  expect(pergunta.id_pergunta).toBe(id_pergunta);
+  expect(pergunta.texto).toBe('Qual a capital do Brasil?');
+
+  // Inicialmente, não deve haver respostas
+  let respostas = modelo.get_respostas(id_pergunta);
+  expect(respostas.length).toBe(0);
+  expect(modelo.get_num_respostas(id_pergunta)).toBe(0);
+
+  // Cadastra duas respostas
+  const id_resposta1 = modelo.cadastrar_resposta(id_pergunta, 'Brasília');
+  const id_resposta2 = modelo.cadastrar_resposta(id_pergunta, 'Rio de Janeiro');
+  expect(id_resposta1).toBeDefined();
+  expect(id_resposta2).toBeDefined();
+
+  // Agora deve haver duas respostas
+  respostas = modelo.get_respostas(id_pergunta);
+  expect(respostas.length).toBe(2);
+  expect(respostas[0].texto).toBe('Brasília');
+  expect(respostas[1].texto).toBe('Rio de Janeiro');
+  expect(modelo.get_num_respostas(id_pergunta)).toBe(2);
+});
