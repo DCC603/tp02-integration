@@ -23,3 +23,20 @@ test('Testando cadastro de três perguntas', () => {
   expect(perguntas[2].num_respostas).toBe(0);
   expect(perguntas[1].id_pergunta).toBe(perguntas[2].id_pergunta-1);
 });
+
+test('cadastrar_resposta deve adicionar uma resposta a uma pergunta existente', () => {
+  const id_pergunta = modelo.cadastrar_pergunta('Pergunta de teste para respostas');
+  const texto_resposta = 'Esta é uma resposta de teste.';
+  const id_resposta = modelo.cadastrar_resposta(id_pergunta, texto_resposta);
+  expect(id_resposta).toBeGreaterThan(0);
+  const respostas = modelo.get_respostas(id_pergunta);
+  expect(respostas.length).toBe(1);
+  expect(respostas[0].texto).toBe(texto_resposta);
+});
+
+test('get_pergunta deve retornar undefined para um ID de pergunta inexistente', () => {
+  const id_inexistente = 999;
+  const pergunta = modelo.get_pergunta(id_inexistente);
+  expect(pergunta).toBeUndefined();
+});
+
